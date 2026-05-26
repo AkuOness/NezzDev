@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Joki MLBB — Boosting Rank Mobile Legends</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#6366f1;
+  --primary-glow:#818cf8;
+  --primary-dark:#4f46e5;
+  --bg:#0a0a0f;
+  --card:#12121a;
+  --border:#ffffff08;
+  --text:#ffffff;
+  --muted:#9ca3af;
+  --success:#22c55e;
+  --warning:#f59e0b;
+  --danger:#ef4444;
+  --gold:#fbbf24;
+  --orange:#f97316;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth;-webkit-overflow-scrolling:touch;scroll-padding-top:80px}
+body{font-family:'Outfit',sans-serif;color:var(--text);background:var(--bg);overflow-x:hidden;-webkit-font-smoothing:antialiased;max-width:100vw}
+@media(max-width:480px){
+  html,body{max-width:100vw;overflow-x:hidden;width:100%}
+  *{max-width:100vw}
+}
+
+/* SCROLL PROGRESS */
+.scroll-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--primary-glow),var(--gold));z-index:1001;transition:width .1s}
+
+/* LOADER */
+.loader-overlay{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transition:opacity .6s,visibility .6s}
+.loader-overlay.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.loader-logo-wrap{position:relative;margin-bottom:30px;text-align:center;width:100%}
+.loader-logo{width:150px;height:auto;display:inline-block;animation:loaderPulse 1.5s ease-in-out infinite;filter:drop-shadow(0 0 30px rgba(251,191,36,.5))}
+@keyframes loaderPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.loader-bar{width:200px;height:4px;background:#1a1a24;border-radius:4px;overflow:hidden;margin:0 auto}
+.loader-progress{height:100%;width:0;background:linear-gradient(90deg,var(--primary),var(--gold));border-radius:4px;animation:loadBar 2s ease-in-out forwards}
+@keyframes loadBar{0%{width:0}50%{width:70%}100%{width:100%}}
+.loader-text{font-size:12px;color:var(--muted);margin-top:16px;letter-spacing:2px}
+@media(max-width:480px){
+  .loader-logo{width:100px}
+  .loader-bar{width:140px}
+  .loader-text{font-size:10px}
+  .loader-logo-wrap{margin-bottom:20px}
+}
+
+/* BG */
+.bg{position:fixed;inset:0;z-index:0;background:var(--bg)}
+.bg-gradient{position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(99,102,241,.15) 0%,transparent 50%),radial-gradient(ellipse at 80% 50%,rgba(249,115,22,.1) 0%,transparent 50%),radial-gradient(ellipse at 50% 100%,rgba(251,191,36,.08) 0%,transparent 40%)}
+.bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse at center,black 20%,transparent 80%)}
+.bg-glow{position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(99,102,241,.3) 0%,transparent 70%);filter:blur(80px);animation:glowPulse 4s ease-in-out infinite}
+@keyframes glowPulse{0%,100%{opacity:.5;transform:translateX(-50%) scale(1)}50%{opacity:.8;transform:translateX(-50%) scale(1.1)}}
+
+/* PARTICLES */
+.particles{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.particle{position:absolute;width:4px;height:4px;background:var(--gold);border-radius:50%;opacity:.3;animation:particleFloat 15s infinite}
+@keyframes particleFloat{0%,100%{transform:translateY(100vh) rotate(0deg);opacity:0}10%{opacity:.3}90%{opacity:.3}100%{transform:translateY(-100vh) rotate(720deg);opacity:0}}
+
+
+/* FLOATING DECOR IMAGES */
+.decor-img{position:fixed;opacity:.7;pointer-events:none;z-index:2;filter:drop-shadow(0 5px 20px rgba(0,0,0,.3))}
+.decor-img-1{width:120px;animation:orbitDeco1 20s linear infinite}
+.decor-img-2{width:100px;animation:orbitDeco2 25s linear infinite}
+.decor-img-3{width:130px;animation:orbitDeco3 30s linear infinite}
+.decor-img-4{width:100px;animation:orbitDeco4 22s linear infinite}
+.decor-img-5{width:90px;animation:orbitDeco5 28s linear infinite}
+.decor-img-6{width:110px;animation:orbitDeco6 35s linear infinite}
+@keyframes orbitDeco1{
+  0%{top:10%;left:-50px;transform:rotate(0deg)}
+  25%{top:10%;left:calc(100% + 50px);transform:rotate(90deg)}
+  50%{top:calc(100% - 100px);left:calc(100% + 50px);transform:rotate(180deg)}
+  75%{top:calc(100% - 100px);left:-50px;transform:rotate(270deg)}
+  100%{top:10%;left:-50px;transform:rotate(360deg)}
+}
+@keyframes orbitDeco2{
+  0%{top:-50px;left:20%;transform:rotate(0deg)}
+  25%{top:20%;left:calc(100% - 50px);transform:rotate(-90deg)}
+  50%{top:calc(100% + 50px);left:calc(100% - 50px);transform:rotate(-180deg)}
+  75%{top:20%;left:20%;transform:rotate(-270deg)}
+  100%{top:-50px;left:20%;transform:rotate(-360deg)}
+}
+@keyframes orbitDeco3{
+  0%{top:calc(100% + 50px);left:30%;transform:rotate(0deg)}
+  25%{top:calc(100% - 50px);left:-50px;transform:rotate(90deg)}
+  50%{top:-50px;left:30%;transform:rotate(180deg)}
+  75%{top:-50px;left:calc(100% + 50px);transform:rotate(270deg)}
+  100%{top:calc(100% + 50px);left:30%;transform:rotate(360deg)}
+}
+@keyframes orbitDeco4{
+  0%{top:50%;left:-80px;transform:rotate(0deg)}
+  33%{top:10%;left:50%;transform:rotate(120deg)}
+  66%{top:90%;left:50%;transform:rotate(240deg)}
+  100%{top:50%;left:-80px;transform:rotate(360deg)}
+}
+@keyframes orbitDeco5{
+  0%{bottom:20%;right:-60px;transform:rotate(0deg)}
+  50%{bottom:60%;right:60%;transform:rotate(180deg)}
+  100%{bottom:20%;right:-60px;transform:rotate(360deg)}
+}
+@keyframes orbitDeco6{
+  0%{top:30%;right:-70px;transform:rotate(0deg)}
+  25%{top:5%;left:40%;transform:rotate(90deg)}
+  50%{top:70%;left:60%;transform:rotate(180deg)}
+  75%{top:40%;right:5%;transform:rotate(270deg)}
+  100%{top:30%;right:-70px;transform:rotate(360deg)}
+}
+
+/* BACK TO TOP */
+.back-to-top{position:fixed;bottom:24px;right:24px;width:48px;height:48px;background:var(--card);border:1px solid var(--border);border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:900;opacity:0;visibility:hidden;transition:all .3s;color:var(--muted);font-size:20px}
+.back-to-top.visible{opacity:1;visibility:visible}
+.back-to-top:hover{background:var(--primary);color:#fff;border-color:var(--primary);transform:translateY(-4px)}
+
+/* WHATSAPP FLOAT */
+.wa-float{position:fixed;bottom:24px;left:24px;width:56px;height:56px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:900;box-shadow:0 4px 20px rgba(37,211,102,.4);transition:all .3s;text-decoration:none;font-size:28px}
+.wa-float:hover{transform:scale(1.1);box-shadow:0 8px 30px rgba(37,211,102,.5)}
+.wa-float img{width:32px;height:32px;object-fit:contain}
+
+/* FLOATING ORDER BUTTON */
+.float-order-btn{position:fixed;bottom:24px;right:24px;padding:14px 24px;background:linear-gradient(135deg,var(--primary),var(--orange));color:#fff;font-size:14px;font-weight:700;border-radius:50px;display:flex;align-items:center;gap:8px;z-index:900;box-shadow:0 4px 20px rgba(249,115,22,.4);text-decoration:none;transition:all .3s;animation:pulseGlow 2s ease-in-out infinite}
+.float-order-btn:hover{transform:translateY(-4px) scale(1.05);box-shadow:0 8px 30px rgba(249,115,22,.5)}
+.float-order-btn span{font-size:18px}
+@keyframes pulseGlow{0%,100%{box-shadow:0 4px 20px rgba(249,115,22,.4)}50%{box-shadow:0 4px 30px rgba(249,115,22,.6),0 0 20px rgba(249,115,22,.3)}}
+@media(max-width:768px){.float-order-btn{display:none}}
+
+/* TRUST BADGES */
+.trust-badges{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-top:24px;padding-top:24px;border-top:1px solid var(--border)}
+.trust-item{display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(34,197,94,.1),rgba(16,185,129,.05));padding:12px 20px;border-radius:50px;border:1px solid rgba(34,197,94,.2)}
+.trust-icon{font-size:18px}
+.trust-text{font-size:13px;font-weight:600;color:var(--success)}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;height:52px;display:flex;align-items:center;padding:0 8px;background:rgba(10,10,15,.8);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-logo-wrap{display:flex;align-items:center;flex-shrink:0;margin-right:12px}
+.nav-logo-wrap img{height:26px;filter:drop-shadow(0 0 10px rgba(251,191,36,.5));transition:filter .3s}
+.nav-logo-wrap:hover img{filter:drop-shadow(0 0 20px rgba(251,191,36,.8)) drop-shadow(0 0 40px rgba(251,191,36,.4))}
+.nav-links{display:flex;gap:8px;list-style:none;margin:0;padding:0}
+.nav-links a{font-size:11px;font-weight:600;color:var(--muted);text-decoration:none;transition:color .2s;white-space:nowrap}
+.nav-links a:hover{color:var(--text)}
+.nav-links li{border:none}
+
+/* HERO */
+.hero{position:relative;z-index:10;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px}
+.hero-logo-wrap{position:relative;margin-bottom:4px;text-align:center;width:100%}
+.hero-logo{height:300px;width:auto;display:inline-block;animation:float 3s ease-in-out infinite;filter:drop-shadow(0 0 30px rgba(251,191,36,.5))}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.hero-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:350px;height:350px;background:radial-gradient(circle,rgba(251,191,36,.5) 0%,transparent 70%);filter:blur(50px);animation:heroGlow 3s ease-in-out infinite;pointer-events:none}
+@keyframes heroGlow{0%,100%{opacity:.6;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);border-radius:50px;font-size:13px;font-weight:600;color:var(--gold);margin-bottom:24px;animation:fadeInDown .8s ease-out}
+@keyframes fadeInDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+.hero-badge::before{content:'';width:8px;height:8px;background:var(--success);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.hero-social{display:flex;gap:12px;justify-content:center;margin-bottom:32px;animation:fadeInUp .8s ease-out .1s backwards}
+.hero-social a{width:44px;height:44px;background:var(--card);border:1px solid var(--border);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--muted);text-decoration:none;transition:all .3s;font-size:18px}
+.hero-social a:hover{transform:translateY(-4px) scale(1.1);box-shadow:0 8px 25px rgba(99,102,241,.3)}
+.hero-social a.wa:hover{background:#25D366;color:#fff;border-color:#25D366}
+.hero-social a.yt:hover{background:#ff0000;color:#fff;border-color:#ff0000}
+.hero-social a.ig:hover{background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;border-color:#fff}
+.hero-title{font-size:clamp(28px,5vw,56px);font-weight:800;line-height:1.2;margin-bottom:20px;text-shadow:0 0 40px rgba(251,191,36,.3);animation:fadeInUp .8s ease-out .2s backwards}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.hero-title span{color:var(--gold);text-shadow:0 0 30px rgba(251,191,36,.5)}
+.hero-desc{font-size:18px;color:var(--muted);max-width:500px;line-height:1.6;margin-bottom:40px;animation:fadeInUp .8s ease-out .4s backwards}
+.hero-btns{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-bottom:60px;animation:fadeInUp .8s ease-out .6s backwards}
+.btn-primary{font-size:16px;font-weight:700;padding:16px 36px;background:linear-gradient(135deg,var(--primary),var(--orange));color:#fff;border:none;border-radius:12px;cursor:pointer;text-decoration:none;transition:all .2s;box-shadow:0 8px 30px rgba(249,115,22,.4)}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(249,115,22,.5)}
+.btn-secondary{font-size:16px;font-weight:600;padding:16px 36px;background:transparent;color:#fff;border:2px solid rgba(251,191,36,.3);border-radius:12px;cursor:pointer;text-decoration:none;transition:all .3s}
+.btn-secondary:hover{border-color:var(--gold);background:rgba(251,191,36,.1);box-shadow:0 0 30px rgba(251,191,36,.2)}
+.stat{padding:20px 40px;background:var(--card);border:1px solid var(--border);text-align:center;position:relative;overflow:hidden}
+.stat::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0}
+.stat:hover::before{opacity:1}
+.stat:first-child{border-radius:12px 0 0 12px}
+.stat:last-child{border-radius:0 12px 12px 0}
+.stat-v{font-size:20px;font-weight:800;color:var(--gold);margin-bottom:4px;text-shadow:0 0 20px rgba(251,191,36,.5)}
+.stat-l{font-size:12px;font-weight:600;color:var(--muted)}
+
+/* SECTIONS */
+.sec{position:relative;z-index:10;padding:80px 24px}
+.sec-in{max-width:1100px;margin:0 auto}
+.sec-tag{font-size:12px;font-weight:700;color:var(--gold);letter-spacing:2px;text-transform:uppercase;text-align:center;margin-bottom:12px;text-shadow:0 0 20px rgba(251,191,36,.3)}
+.sec-h{font-size:clamp(24px,4vw,40px);font-weight:800;text-align:center;margin-bottom:16px}
+.sec-sub{font-size:16px;color:var(--muted);text-align:center;max-width:500px;margin:0 auto 48px;line-height:1.6}
+
+/* RANK LIST - MODERN ATTRACTIVE STYLE */
+.rank-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.rank-card {
+  background: linear-gradient(145deg, #1a1a2e 0%, #12121a 100%);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 16px;
+  padding: 20px 16px;
+  text-align: center;
+  position: relative;
+  transition: all .4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  overflow: hidden;
+  cursor: pointer;
+}
+/* Top gradient line */
+.rank-card::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:3px;
+  background:linear-gradient(90deg,var(--primary),var(--orange),var(--gold));
+  opacity:0;
+  transition:opacity .3s;
+}
+/* Shine effect */
+.rank-card::after{
+  content:'';
+  position:absolute;
+  top:0;
+  left:-100%;
+  width:100%;
+  height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.05),transparent);
+  transition:left .6s;
+}
+.rank-card:hover::after{left:100%}
+.rank-card:hover{transform:translateY(-8px) scale(1.02);border-color:rgba(251,191,36,.4)}
+.rank-card:hover::before{opacity:1}
+/* Glow on hover */
+.rank-card:hover{box-shadow:0 20px 40px rgba(251,191,36,.2),0 0 60px rgba(99,102,241,.1)}
+
+/* Featured card styling */
+.rank-card.featured{
+  background:linear-gradient(145deg,#2a1a0a 0%,#1a1208 100%);
+  border:2px solid var(--gold);
+  box-shadow:0 0 30px rgba(251,191,36,.3),inset 0 0 30px rgba(251,191,36,.05);
+}
+.rank-card.featured::before{opacity:1}
+/* BEST badge */
+.rank-card.featured .best-badge{
+  position:absolute;
+  top:-1px;
+  right:-1px;
+  background:linear-gradient(135deg,var(--gold),var(--orange));
+  color:#000;
+  font-size:10px;
+  font-weight:800;
+  padding:6px 20px;
+  border-radius:0 14px 0 12px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  box-shadow:0 4px 15px rgba(251,191,36,.4);
+}
+.rank-icon{margin-bottom:12px;position:relative}
+.rank-icon img{width:56px;height:56px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.3));transition:transform .3s}
+.rank-card:hover .rank-icon img{transform:scale(1.1) rotate(5deg)}
+.rank-name{font-size:14px;font-weight:700;margin-bottom:4px;color:var(--text);text-transform:uppercase;letter-spacing:1px}
+.rank-stars{font-size:12px;color:var(--gold);margin-bottom:12px;letter-spacing:2px}
+.rank-price-wrap{background:rgba(0,0,0,.3);border-radius:10px;padding:12px;margin-bottom:14px}
+.rank-price{font-size:22px;font-weight:900;color:var(--gold);text-shadow:0 0 20px rgba(251,191,36,.5);margin-bottom:2px}
+.rank-price span{font-size:11px;font-weight:500;color:var(--muted)}
+.rank-note{font-size:10px;color:var(--muted);margin-bottom:14px;line-height:1.4}
+/* Gradient CTA button */
+.btn-rank{
+  display:inline-block;
+  padding:10px 20px;
+  background:linear-gradient(135deg,var(--primary) 0%,var(--orange) 100%);
+  color:#fff;
+  font-size:11px;
+  font-weight:700;
+  border-radius:25px;
+  text-decoration:none;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  transition:all .3s;
+  box-shadow:0 4px 15px rgba(99,102,241,.3);
+  position:relative;
+  overflow:hidden;
+  border:none;
+  cursor:pointer;
+}
+.btn-rank::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:-100%;
+  width:100%;
+  height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);
+  transition:left .4s;
+}
+.btn-rank:hover::before{left:100%}
+.btn-rank:hover{transform:translateY(-2px) scale(1.05);box-shadow:0 8px 25px rgba(99,102,241,.5)}
+
+/* MABAR BARENG PENJOKI - SINGLE CARD */
+.mabar-single-card{
+  background:linear-gradient(145deg,#1a2a1a 0%,#0f1a0f 100%);
+  border:2px solid rgba(34,197,94,.4);
+  border-radius:20px;
+  padding:32px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+  max-width:700px;
+  margin:0 auto;
+  transition:all .4s;
+  position:relative;
+  overflow:hidden;
+}
+.mabar-single-card::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:3px;
+  background:linear-gradient(90deg,#22c55e,#16a34a);
+}
+.mabar-single-card:hover{border-color:rgba(34,197,94,.7);box-shadow:0 20px 40px rgba(34,197,94,.2)}
+.mabar-single-icon{flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.mabar-single-content{flex:1}
+.mabar-single-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px}
+.mabar-single-desc{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:16px}
+.mabar-form-row{display:flex;gap:12px}
+.mabar-form-row .mabar-select-wrap{flex:1}
+.mabar-select-wrap label{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
+.mabar-select-wrap select{
+  width:100%;
+  padding:12px 16px;
+  background:rgba(0,0,0,.4);
+  border:1px solid rgba(34,197,94,.3);
+  border-radius:12px;
+  color:var(--text);
+  font-size:14px;
+  font-family:'Outfit',sans-serif;
+  cursor:pointer;
+  outline:none;
+  transition:all .3s;
+}
+.mabar-select-wrap select:focus{border-color:#22c55e;box-shadow:0 0 20px rgba(34,197,94,.3)}
+.mabar-select-wrap select option{background:#12121a}
+.mabar-price-display{
+  margin-top:12px;
+  padding:10px 16px;
+  background:rgba(34,197,94,.1);
+  border:1px solid rgba(34,197,94,.3);
+  border-radius:10px;
+  text-align:center;
+}
+.mabar-price-display span{font-size:18px;font-weight:800;color:#22c55e}
+.btn-mabar{
+  padding:14px 28px;
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+  color:#fff;
+  font-size:12px;
+  font-weight:700;
+  border-radius:25px;
+  text-decoration:none;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  transition:all .3s;
+  box-shadow:0 4px 20px rgba(34,197,94,.4);
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.btn-mabar:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(34,197,94,.5)}
+.btn-mabar-disabled{
+  opacity:0.5;
+  cursor:not-allowed;
+  pointer-events:none;
+}
+
+/* JASA EDIT MONTAGE */
+.montage-card{
+  background:linear-gradient(145deg,#1a1a2e 0%,#12121a 100%);
+  border:1px solid rgba(99,102,241,.3);
+  border-radius:20px;
+  padding:32px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+  max-width:700px;
+  margin:0 auto;
+  transition:all .4s;
+}
+.montage-card:hover{border-color:rgba(99,102,241,.6);box-shadow:0 20px 40px rgba(99,102,241,.2)}
+.montage-icon{flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.montage-content{flex:1}
+.montage-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px}
+.montage-desc{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:12px}
+.montage-price{font-size:24px;font-weight:900;color:var(--primary);text-shadow:0 0 20px rgba(99,102,241,.5)}
+.montage-price span{font-size:12px;font-weight:500;color:var(--muted)}
+.btn-montage{
+  padding:14px 28px;
+  background:linear-gradient(135deg,var(--primary),var(--orange));
+  color:#fff;
+  font-size:12px;
+  font-weight:700;
+  border-radius:25px;
+  text-decoration:none;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  transition:all .3s;
+  box-shadow:0 4px 20px rgba(99,102,241,.4);
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.btn-montage:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(99,102,241,.5)}
+
+/* REDEEM SECTION IN MODAL */
+.redeem-logo-wrap{text-align:center;margin-bottom:16px}
+.redeem-logo{width:80px;height:auto;display:inline-block;filter:drop-shadow(0 0 15px rgba(251,191,36,.5));animation:redeemFloat 2s ease-in-out infinite}
+@keyframes redeemFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+/* GAME MODES */
+.modes-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.mode-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center;transition:all .3s}
+.mode-card:hover{border-color:rgba(251,191,36,.3);transform:translateY(-4px)}
+.mode-icon{font-size:32px;margin-bottom:12px}
+.mode-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px}
+.mode-desc{font-size:12px;color:var(--muted)}
+
+/* STEPS */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.step{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;text-align:center;transition:all .3s;position:relative}
+.step:hover{transform:translateY(-4px);border-color:rgba(251,191,36,.3)}
+.step-icon{font-size:40px;margin-bottom:16px}
+.step-num{font-size:36px;font-weight:800;color:var(--gold);margin-bottom:16px;text-shadow:0 0 30px rgba(251,191,36,.5)}
+.step-title{font-size:16px;font-weight:700;margin-bottom:8px}
+.step-desc{font-size:14px;color:var(--muted);line-height:1.5}
+
+/* GUARANTEE */
+.guarantee{background:linear-gradient(135deg,rgba(34,197,94,.1) 0%,rgba(16,185,129,.1) 100%);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.guarantee-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.guarantee-item{text-align:center;padding:16px}
+.guarantee-icon{font-size:28px;margin-bottom:8px}
+.guarantee-title{font-size:12px;font-weight:700;margin-bottom:4px;color:var(--text)}
+.guarantee-desc{font-size:10px;color:var(--muted);line-height:1.4}
+
+/* TESTIMONIALS */
+.testimonials{background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.testi-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px;transition:all .3s}
+.testi-card:hover{transform:translateY(-4px);border-color:rgba(251,191,36,.3)}
+.testi-avatar{width:36px;height:36px;background:linear-gradient(135deg,var(--primary),var(--gold));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;margin-bottom:12px}
+.testi-stars{color:#fbbf24;margin-bottom:8px;font-size:12px}
+.testi-text{font-size:11px;color:var(--muted);line-height:1.4;margin-bottom:12px;font-style:italic}
+.testi-name{font-size:12px;font-weight:700;color:var(--text)}
+.testi-role{font-size:10px;color:var(--muted)}
+
+/* FAQ */
+.faq-list{max-width:700px;margin:0 auto}
+.faq-item{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;transition:all .3s}
+.faq-item:hover{border-color:rgba(251,191,36,.3)}
+.faq-question{padding:20px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-size:16px;font-weight:600;color:var(--text)}
+.faq-question::after{content:'+';font-size:24px;color:var(--muted);transition:transform .3s}
+.faq-item.active .faq-question::after{transform:rotate(45deg);color:var(--gold)}
+.faq-answer{max-height:0;overflow:hidden;transition:max-height .3s ease-out}
+.faq-answer-inner{padding:0 24px 20px;font-size:14px;color:var(--muted);line-height:1.6}
+
+/* CTA */
+#cta{text-align:center;padding:100px 24px;background:linear-gradient(180deg,var(--card) 0%,var(--bg) 100%);position:relative}
+#cta::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(251,191,36,.2) 0%,transparent 70%);filter:blur(60px)}
+.cta-title{font-size:clamp(24px,4vw,40px);font-weight:800;margin-bottom:16px}
+.cta-title span{color:var(--gold);text-shadow:0 0 30px rgba(251,191,36,.5)}
+.cta-desc{font-size:18px;color:var(--muted);margin-bottom:32px}
+.cta-note{font-size:13px;color:var(--muted);margin-top:20px}
+.cta-features{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin-bottom:32px}
+.cta-feature{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted)}
+.cta-feature::before{content:'✓';color:var(--success);font-weight:700}
+
+/* FOOTER */
+footer{position:relative;z-index:10;padding:48px 24px;text-align:center;border-top:1px solid var(--border)}
+.footer-logo-wrap{position:relative;display:inline-block;margin-bottom:24px}
+.footer-logo-wrap img{height:44px;filter:drop-shadow(0 0 15px rgba(251,191,36,.4));transition:filter .3s}
+.footer-logo-wrap:hover img{filter:drop-shadow(0 0 25px rgba(251,191,36,.6)) drop-shadow(0 0 50px rgba(251,191,36,.3))}
+.footer-links{display:flex;gap:32px;justify-content:center;flex-wrap:wrap;margin-bottom:24px}
+.footer-links a{font-size:14px;color:var(--muted);text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:var(--gold)}
+.footer-social{display:flex;gap:16px;justify-content:center;margin-bottom:24px}
+.footer-social a{width:44px;height:44px;background:var(--card);border:1px solid var(--border);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--muted);text-decoration:none;transition:all .3s;font-size:20px}
+.footer-social a:hover{transform:translateY(-4px);box-shadow:0 8px 30px rgba(251,191,36,.2)}
+.footer-social a.wa:hover{background:#25D366;color:#fff;border-color:#25D366}
+.footer-social a.yt:hover{background:#ff0000;color:#fff;border-color:#ff0000}
+.footer-social a.ig:hover{background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;border-color:#fff}
+.footer-dev{font-size:14px;color:var(--gold);margin-bottom:16px;text-decoration:none;transition:all .2s;display:inline-block}
+.footer-dev:hover{color:var(--orange);text-shadow:0 0 20px rgba(251,191,36,.5)}
+.footer-copy{font-size:14px;color:var(--muted)}
+
+/* TOAST */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--card);border:1px solid var(--gold);color:#fff;padding:14px 24px;border-radius:12px;font-size:14px;font-weight:600;z-index:2000;opacity:0;transition:all .4s;box-shadow:0 0 30px rgba(251,191,36,.3)}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* REDEEM BUTTON */
+.btn-redeem-float{position:fixed;top:70px;right:24px;padding:12px 20px;background:linear-gradient(135deg,var(--gold),var(--orange));color:#000;font-size:13px;font-weight:700;border-radius:25px;display:flex;align-items:center;gap:8px;z-index:900;box-shadow:0 4px 20px rgba(251,191,36,.4);text-decoration:none;transition:all .3s;animation:redeemPulse 2s ease-in-out infinite}
+.btn-redeem-float:hover{transform:translateY(-2px) scale(1.05);box-shadow:0 8px 30px rgba(251,191,36,.5)}
+.btn-redeem-float span{font-size:16px}
+@keyframes redeemPulse{0%,100%{box-shadow:0 4px 20px rgba(251,191,36,.4)}50%{box-shadow:0 4px 30px rgba(251,191,36,.6),0 0 20px rgba(251,191,36,.3)}}
+@media(max-width:768px){.btn-redeem-float{display:none}}
+
+/* BUTTON DISABLED STATE */
+.btn-order-disabled{opacity:0.5;cursor:not-allowed;pointer-events:none}
+
+/* ORDER MODAL */
+.order-modal{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:all .3s cubic-bezier(.4,0,.2,1);padding:16px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.order-modal.active{opacity:1;visibility:visible}
+.order-modal-content{position:relative;width:300px;max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch;background:linear-gradient(160deg,#15152a 0%,#0e0e1a 100%);border-radius:24px;padding:28px 22px 24px;border:1px solid rgba(251,191,36,.25);box-shadow:0 0 60px rgba(251,191,36,.12),0 30px 80px rgba(0,0,0,.6);animation:modalSlideIn .35s cubic-bezier(.4,0,.2,1)}
+@keyframes modalSlideIn{from{opacity:0;transform:translateY(30px) scale(.93)}to{opacity:1;transform:translateY(0) scale(1)}}
+.order-modal-content::before{content:'';position:absolute;top:0;left:10%;right:10%;height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--orange),transparent);border-radius:0 0 4px 4px}
+.order-modal-close{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--muted);font-size:15px;width:30px;height:30px;border-radius:8px;cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;line-height:1;z-index:10}
+.order-modal-close:hover{background:rgba(239,68,68,.3);color:#fff;border-color:rgba(239,68,68,.5);transform:rotate(90deg) scale(1.1)}
+
+/* MODAL HEADER */
+.order-modal-header{text-align:center;margin-bottom:18px;padding-right:30px}
+.order-modal-header h3{font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--gold),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:2px}
+
+/* MODAL SECTION TITLE */
+.modal-section-title{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:6px}
+.modal-section-title .modal-icon{font-size:22px;filter:drop-shadow(0 0 10px rgba(251,191,36,.5))}
+.modal-section-title h3{font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--gold),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.modal-subtitle{text-align:center;font-size:11px;color:var(--muted);margin-bottom:20px;letter-spacing:.3px}
+
+/* MODAL DIVIDER */
+.modal-divider{display:flex;align-items:center;gap:12px;margin:16px 0}
+.modal-divider::before,.modal-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(251,191,36,.2),transparent)}
+.modal-divider span{font-size:10px;color:var(--muted);font-weight:700;letter-spacing:2px;text-transform:uppercase}
+
+/* MODAL BACK BUTTON */
+.order-modal-back{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--muted);font-size:11px;padding:8px 14px;border-radius:10px;cursor:pointer;transition:all .25s;margin-bottom:16px;display:inline-flex;align-items:center;gap:5px;font-family:inherit}
+.order-modal-back:hover{background:rgba(255,255,255,.1);color:#fff}
+
+/* FORM GROUP */
+.order-form-group{margin-bottom:14px}
+.order-form-group label{display:block;font-size:10px;font-weight:700;color:var(--muted);margin-bottom:7px;text-transform:uppercase;letter-spacing:1.5px}
+.order-form-group input,.order-form-group select{width:100%;padding:13px 14px;background:rgba(0,0,0,.5);border:1.5px solid rgba(255,255,255,.08);border-radius:12px;color:var(--text);font-size:13px;font-family:inherit;outline:none;transition:all .25s;-webkit-appearance:none}
+.order-form-group input::placeholder{color:rgba(156,163,175,.4)}
+.order-form-group input:focus,.order-form-group select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,.12),0 0 20px rgba(99,102,241,.15)}
+.order-form-group select:disabled{opacity:.3;cursor:not-allowed}
+.order-form-group select option{background:#0e0e1a}
+
+/* PRICE DISPLAY */
+.order-price-display{background:linear-gradient(135deg,rgba(251,191,36,.08) 0%,rgba(249,115,22,.05) 100%);border:1.5px solid rgba(251,191,36,.25);border-radius:16px;padding:18px 14px;text-align:center;margin-bottom:18px;position:relative;overflow:hidden}
+.order-price-display::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(251,191,36,.5),transparent)}
+.order-price-display .label{font-size:9px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:2px;font-weight:700}
+.order-price-display .price{font-size:28px;font-weight:900;color:var(--gold);text-shadow:0 0 30px rgba(251,191,36,.4);margin-bottom:6px}
+.order-price-display .detail{font-size:10px;color:var(--muted);line-height:1.5}
+
+/* BUTTONS */
+.btn-order{width:100%;padding:15px 20px;background:linear-gradient(135deg,var(--primary),#7c3aed);color:#fff;font-size:13px;font-weight:800;border:none;border-radius:14px;cursor:pointer;transition:all .3s;letter-spacing:.5px;display:block;text-align:center;text-decoration:none;text-transform:uppercase;font-family:inherit;box-shadow:0 4px 20px rgba(99,102,241,.3)}
+.btn-order:hover{transform:translateY(-3px);box-shadow:0 10px 40px rgba(99,102,241,.45)}
+.btn-order:active{transform:translateY(0) scale(.98)}
+.btn-order-disabled{opacity:.35;cursor:not-allowed;background:linear-gradient(135deg,rgba(99,102,241,.3),rgba(124,58,237,.2));box-shadow:none}
+.btn-order-disabled:hover{transform:none;box-shadow:none}
+.btn-order-alt{background:transparent;border:1.5px solid rgba(251,191,36,.3);color:var(--gold);font-size:12px;padding:13px 20px;text-transform:capitalize;letter-spacing:0;box-shadow:none}
+.btn-order-alt:hover{background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.5);box-shadow:0 0 25px rgba(251,191,36,.12)}
+.btn-order-gold{background:linear-gradient(135deg,var(--gold),var(--orange));color:#000;box-shadow:0 4px 25px rgba(251,191,36,.35)}
+.btn-order-gold:hover{box-shadow:0 10px 40px rgba(251,191,36,.5)}
+
+/* REDEEM SECTION */
+.redeem-logo-wrap{text-align:center;margin-bottom:16px}
+.redeem-logo{width:72px;height:auto;display:inline-block;filter:drop-shadow(0 0 20px rgba(251,191,36,.6));animation:redeemFloat 2.5s ease-in-out infinite}
+@keyframes redeemFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-8px) scale(1.03)}}
+
+/* REDEEM RESULT */
+#redeemResult.success{border-color:rgba(34,197,94,.4);background:linear-gradient(135deg,rgba(34,197,94,.1),rgba(34,197,94,.05))}
+#redeemResult.success::before{background:linear-gradient(90deg,transparent,rgba(34,197,94,.5),transparent)}
+#redeemResult.success .price{color:#4ade80;text-shadow:0 0 25px rgba(34,197,94,.4)}
+#redeemResult.success{border-color:rgba(34,197,94,.5);background:linear-gradient(135deg,rgba(34,197,94,.1),rgba(34,197,94,.05))}
+#redeemResult.success .price{color:#4ade80;text-shadow:0 0 20px rgba(34,197,94,.5)}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .rank-grid{grid-template-columns:repeat(4,1fr);gap:8px;max-width:100%;padding:0 6px}
+  .rank-card{padding:10px 6px;border-radius:12px}
+  .rank-icon img{width:36px;height:36px}
+  .rank-name{font-size:9px;letter-spacing:0.5px}
+  .rank-stars{font-size:8px;margin-bottom:8px}
+  .rank-price{font-size:14px}
+  .rank-price span{font-size:9px}
+  .rank-note{font-size:7px;margin-bottom:8px;line-height:1.2}
+  .btn-rank{padding:6px 10px;font-size:8px;border-radius:15px}
+}
+@media(max-width:480px){
+  body{min-width:auto}
+  .hero{min-height:100vh}
+  nav .nav-toggle{display:none}
+  .back-to-top,.wa-float{position:fixed}
+
+  /* Nav mobile - KIRI */
+  nav{justify-content:flex-start}
+  .nav-logo-wrap{position:relative}
+  .nav-logo-wrap img{height:22px!important}
+  .nav-links a{font-size:9px!important;padding:0}
+
+  /* Back to top & WA mobile */
+  .back-to-top{bottom:16px;right:16px;width:40px;height:40px;font-size:16px}
+  .wa-float{bottom:16px;left:16px;width:44px;height:44px;font-size:22px}
+  .wa-float img{width:24px;height:24px}
+
+  /* Guarantee mobile */
+  .guarantee-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .guarantee-item{padding:10px}
+  .guarantee-icon{font-size:22px;margin-bottom:4px}
+  .guarantee-title{font-size:10px;margin-bottom:2px}
+  .guarantee-desc{font-size:9px}
+
+  /* Testimonial mobile */
+  .testi-grid{grid-template-columns:1fr;gap:10px}
+  .testi-card{padding:12px}
+  .testi-avatar{width:32px;height:32px;font-size:12px;margin-bottom:8px}
+  .testi-stars{font-size:10px;margin-bottom:6px}
+  .testi-text{font-size:10px;margin-bottom:8px}
+  .testi-name{font-size:11px}
+  .testi-role{font-size:9px}
+
+  /* Trust badges mobile */
+  .trust-badges{gap:8px;padding-top:16px;margin-top:16px}
+  .trust-item{padding:6px 10px;gap:4px}
+  .trust-icon{font-size:12px}
+  .trust-text{font-size:9px}
+
+  /* Footer mobile */
+  footer{padding:24px 16px}
+  .footer-links{gap:12px;margin-bottom:16px}
+  .footer-links a{font-size:10px}
+  .footer-social{margin-bottom:16px}
+  .footer-social a{width:32px;height:32px}
+  .footer-social a img{width:16px;height:16px}
+  .footer-dev{font-size:10px;margin-bottom:8px}
+  .footer-copy{font-size:9px}
+}
+
+/* HP 6.78 inci (360-420px) */
+@media screen and (max-width:420px) and (min-height:700px){
+  .order-modal{justify-content:center;align-items:flex-start;padding:20px 0}
+  .order-modal-content{width:280px;margin:16px auto;border-radius:20px}
+  .order-modal-close{top:10px;right:10px;width:28px;height:28px;font-size:14px}
+  .order-modal-header{margin-bottom:14px;padding-right:28px}
+  .order-modal-header h3{font-size:16px}
+  .order-form-group{margin-bottom:12px}
+  .order-form-group label{font-size:9px}
+  .order-form-group input,.order-form-group select{padding:11px 12px;font-size:12px}
+  .order-price-display{padding:14px 12px;margin-bottom:14px;border-radius:14px}
+  .order-price-display .label{font-size:8px}
+  .order-price-display .price{font-size:24px}
+  .order-price-display .detail{font-size:9px}
+  .btn-order{padding:13px 16px;font-size:12px;border-radius:12px}
+  .modal-divider{margin:12px 0}
+  .modal-section-title{margin-bottom:14px}
+  .redeem-logo{width:64px}
+  .order-modal-header p{font-size:9px}
+  .order-form-group{margin-bottom:10px}
+  .order-form-group label{font-size:9px}
+  .order-form-group input,.order-form-group select{padding:8px 10px;font-size:11px}
+  .order-price-display{padding:12px;margin-bottom:12px}
+  .order-price-display .label{font-size:8px}
+  .order-price-display .price{font-size:20px}
+  .order-price-display .detail{font-size:8px}
+  .btn-order{padding:12px;font-size:12px}
+}
+
+@media(max-width:360px){
+  .rank-grid{grid-template-columns:repeat(4,1fr);gap:5px;padding:0 3px}
+  .rank-card{padding:8px 4px;border-radius:10px}
+  .rank-icon img{width:28px;height:28px}
+  .rank-name{font-size:8px}
+  .rank-stars{font-size:7px}
+  .rank-price{font-size:12px}
+  .rank-price span{font-size:8px}
+  .rank-note{font-size:6px}
+  .btn-rank{padding:5px 8px;font-size:7px}
+}
+
+/* Responsive for Mabar & Montage */
+@media(max-width:768px){
+  .mabar-single-card{flex-direction:column;text-align:center;padding:20px}
+  .mabar-single-icon{font-size:40px;margin-bottom:8px}
+  .mabar-form-row{flex-direction:column}
+  .mabar-select-wrap label{text-align:left}
+  .mabar-price-display span{font-size:16px}
+  .btn-mabar{width:100%;text-align:center}
+  .montage-card{flex-direction:column;text-align:center;padding:20px}
+  .montage-icon{font-size:40px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+  .montage-content{margin-bottom:16px}
+  .btn-montage{width:100%;text-align:center}
+}
+
+/* PROMO BANNER */
+.promo-banner{background:linear-gradient(135deg,var(--primary),var(--orange));padding:16px 24px;text-align:center;position:relative;z-index:10;overflow:hidden}
+.promo-banner::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent);transform:translateX(-100%);animation:shimmer 3s infinite}
+@keyframes shimmer{100%{transform:translateX(100%)}}
+.promo-content{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.promo-icon{font-size:28px;animation:bounce 1s infinite}
+.promo-text{font-size:16px;font-weight:600;color:#fff}
+.promo-sub{font-size:13px;font-weight:400;opacity:.9}
+.promo-code{background:rgba(0,0,0,.3);padding:4px 12px;border-radius:20px;font-weight:800;letter-spacing:2px}
+</style>
+</head>
+<body>
+
+
+<!-- SCROLL PROGRESS -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- LOADER -->
+<div class="loader-overlay" id="loader">
+  <div class="loader-logo-wrap">
+    <img src="https://plain-apac-prod-public.komododecks.com/202605/20/ulWbfLykwXVJzpwXT4Qx/image.png" alt="Loading" class="loader-logo">
+  </div>
+  <div class="loader-bar"><div class="loader-progress"></div></div>
+  <div class="loader-text">LOADING...</div>
+</div>
+
+<div class="bg">
+  <div class="bg-glow"></div>
+  <div class="bg-gradient"></div>
+  <div class="bg-grid"></div>
+</div>
+
+<!-- PARTICLES -->
+<div class="particles" id="particles"></div>
+
+
+<!-- DECORATIVE FLOATING IMAGES -->
+<img src="https://media.tenor.com/rgEByWLq0IoAAAAm/leee.webp" alt="Decoration" class="decor-img decor-img-1" id="decorImg1">
+<img src="https://i.pinimg.com/originals/e0/46/47/e046472bee90c66f7e4977081e58a202.png" alt="Decoration" class="decor-img decor-img-2" id="decorImg2">
+<img src="https://d1x91p7vw3vuq8.cloudfront.net/itemku-upload/2021629/mtxqn6fhg1x3cgqiwnx3f.png" alt="Decoration" class="decor-img decor-img-3" id="decorImg3">
+<img src="https://png.pngtree.com/png-vector/20240910/ourmid/pngtree-mobile-legends-turu-deck-emote-bro-mlbb-vector-png-image_13786289.png" alt="Decoration" class="decor-img decor-img-4" id="decorImg4">
+<img src="https://img-06.stickers.cloud/packs/51c1c0cd-f2d9-4259-8c2a-7d138522b3f1/webp/1cf900a6-0bb3-4686-abf4-302f4bf42b8a.webp" alt="Decoration" class="decor-img decor-img-5" id="decorImg5">
+<img src="https://cdn2.cdnstep.com/icd3luCKn9ladLlQ2pF1/7.webp" alt="Decoration" class="decor-img decor-img-6" id="decorImg6">
+
+<!-- BACK TO TOP -->
+<button class="back-to-top" id="backToTop" onclick="scrollToTop()">↑</button>
+
+<!-- WHATSAPP FLOAT -->
+<a href="https://wa.me/6289684943741" target="_blank" class="wa-float">💬</a>
+
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo-wrap">
+    <img src="https://plain-apac-prod-public.komododecks.com/202605/20/ulWbfLykwXVJzpwXT4Qx/image.png" alt="JOKI ML" style="height:28px;">
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#">Home</a></li>
+    <li><a href="#harga">Harga</a></li>
+    <li><a href="#testi">Testi</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-logo-wrap">
+    <div class="hero-glow"></div>
+    <img src="https://plain-apac-prod-public.komododecks.com/202605/20/ulWbfLykwXVJzpwXT4Qx/image.png" alt="JOKI ML" class="hero-logo">
+  </div>
+  <div class="hero-social">
+    <a href="https://wa.me/6289684943741" target="_blank" class="wa" title="WhatsApp"><img src="https://static.vecteezy.com/system/resources/thumbnails/022/794/113/small/3d-render-whatsapp-logo-icon-isolated-on-transparent-background-free-png.png" style="width:24px;height:24px;object-fit:contain;"></a>
+    <a href="https://www.youtube.com/@akuoness" target="_blank" class="yt" title="YouTube"><img src="https://static.vecteezy.com/system/resources/thumbnails/065/386/840/small/youtube-icon-logo-yt-app-editable-transparent-background-premium-social-media-design-for-digital-download-free-png.png" style="width:24px;height:24px;object-fit:contain;"></a>
+    <a href="https://www.instagram.com/onesszz" target="_blank" class="ig" title="Instagram"><img src="https://static.vecteezy.com/system/resources/thumbnails/042/127/160/small/instagram-logo-on-circle-style-with-transparent-background-free-png.png" style="width:24px;height:24px;object-fit:contain;"></a>
+  </div>
+  <h1 class="hero-title">Joki<br><span>Termurah</span></h1>
+  <p class="hero-desc">Naikkan rank lo dengan cepat, aman, dan garansi 100%</p>
+  <div class="hero-btns">
+    <a href="#harga" class="btn-primary">Lihat Harga</a>
+    <a href="https://wa.me/6289684943741" target="_blank" class="btn-secondary">Chat WhatsApp</a>
+  </div>
+</section>
+
+<!-- PROMO BANNER -->
+<section class="promo-banner">
+  <div class="promo-content">
+    <span class="promo-icon">🎉</span>
+    <div class="promo-text">
+      <strong>DISKON 10%</strong> untuk pembelian pertama!
+      <span class="promo-sub"> Gunakan kode: <span class="promo-code">JOKIML</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- HARGA -->
+<section class="sec" id="harga">
+  <div class="sec-in">
+    <div class="sec-tag">List Harga</div>
+    <h2 class="sec-h">Paket Joki MLBB</h2>
+    <p class="sec-sub">Harga transparan, garansi 100%, proses cepat!</p>
+
+    <!-- RANK CARDS -->
+    <div class="rank-grid" id="rankCards">
+      <div class="rank-card">
+        <div class="rank-icon"><img src="https://plain-apac-prod-public.komododecks.com/202605/21/xGiWIT8lz7ZGUF1GK99p/image.png" alt="Master"></div>
+        <div class="rank-name">Master</div>
+        <div class="rank-price-wrap">
+          <div class="rank-price">Rp1.500</div>
+        </div>
+        <div class="rank-note">1 Star = Rp1.500</div>
+        <button onclick="openOrderModal('Master')" class="btn-rank">Order</button>
+      </div>
+
+      <div class="rank-card">
+        <div class="rank-icon"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg-TkuQDQ2-cWyyxhUW0vvccLFrJcG_kV03EYkDEDRkhCa3yc_HVPOZXayYO0Jqz2ZsD6TDKNmWv2wFH3-u68Axo_AvFWXd4VqMYGhcmVuelRa47U8_fxIE_wztx6ioRdVPOoGhNkQsn3u_vSunkenu17hGhAZmC41618KMapM_SxSqkKKrvwXQ5NFzjiMP/s513/logo-icon-rankgrandmaster-png-ml.png" alt="Grandmaster"></div>
+        <div class="rank-name">Grandmaster</div>
+        <div class="rank-price-wrap">
+          <div class="rank-price">Rp2.500</div>
+        </div>
+        <div class="rank-note">1 Star = Rp2.500</div>
+        <button onclick="openOrderModal('Grandmaster')" class="btn-rank">Order</button>
+      </div>
+
+      <div class="rank-card">
+        <div class="rank-icon"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjDmxNd6WpplFWYUlVs_JZwSCcoxnP_DOEh4kP-x29_NXFcqeKQGUl5xcZjaiGeQ-qAA9ZhlIynZiixAJxEfQbp9E4Is0R1VZpAF4O5YucMMmSmTwGKA-qCwRBCFLP_KWcEs0i7a2F2_nEbXRs1e20SH9peEZ4Y0ItkyEPVVdnYblpD5wDP7rG6d_RuMM2R/s477/logo-icon-rank-epic-png-ml.png" alt="Epic"></div>
+        <div class="rank-name">Epic</div>
+        <div class="rank-price-wrap">
+          <div class="rank-price">Rp4.000</div>
+        </div>
+        <div class="rank-note">1 Star = Rp4.000</div>
+        <button onclick="openOrderModal('Epic')" class="btn-rank">Order</button>
+      </div>
+
+      <div class="rank-card">
+        <div class="rank-icon"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhCkRwReOtdyByANktWBOuR_suAL0BvHxd-6xfuShs3BYwdt1hmoMCrQd5XeDI4MvRv5Lm8ObM0EJnOW0eDt53WiQYQhT5uPKKcsevUenpFix-J4Yqtg-OvBAwXv3mhjxg8RZ5tAr2IJ26vEI2Y-oUyxjNiOprxKElwrgyBxUunitA1AkUIWtIIsQv3pNn1/s473/logo-icon-rank-legend-png-ml.png" alt="Legend"></div>
+        <div class="rank-name">Legend</div>
+        <div class="rank-price-wrap">
+          <div class="rank-price">Rp4.500</div>
+        </div>
+        <div class="rank-note">1 Star = Rp4.500</div>
+        <button onclick="openOrderModal('Legend')" class="btn-rank">Order</button>
+      </div>
+
+      <div class="rank-card">
+        <div class="rank-icon"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhHL46fqUGye4n3fF9EoAY58SG6HR6KT_Xrq0J9PsrHZB1pKcI8N_H_2_bgc1ddbzh5v0hpxw7Yna1TByYA8D02qEOlpDvG7tpYbpKUPyTRALcnC4_a4NBAuvXJwXcvgIXIyZI9c2_WD0Rm4cdMnQZ9tynvg_FKej0TOkk90AASJ29qaY8W-GVpREBimRfk/s467/logo-icon-rank-mythic-png-ml.png" alt="Mythic"></div>
+        <div class="rank-name">Mythic</div>
+        <div class="rank-price-wrap">
+          <div class="rank-price">Rp6.000</div>
+        </div>
+        <div class="rank-note">1 Poin = Rp6.000</div>
+        <button onclick="openOrderModal('Mythic')" class="btn-rank">Order</button>
+      </div>
+
+      <div class="rank-card">
+        <div class="rank-icon"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh8FV7yiXzQY_5we3v0ctXq6hcf3V5ZSMVR2pS_RRiG-uflh1Iop4nfGpv5wibLyALUrpsOacaN_A_Q0LY4XFhXR6J5Qx8NjPj4X0UM0jYHQlYb_kg9n5Xvcz_43QB4_umU2-mgDVanGgAKAb3HJ7CJQW36GsciuukA3u7VjpHiSF35mHGKfKtFf_zH94Rm/s482/logo-icon-rank-mythical-honor-png-ml.png" alt="Mythic Honor"></div>
+        <div class="rank-name">Mythic Honor</div>
+        <div class="rank-price-wrap">
+          <div class="rank-price">Rp7.500</div>
+        </div>
+        <div class="rank-note">1 Poin = Rp7.500</div>
+        <button onclick="openOrderModal('MythicHonor')" class="btn-rank">Order</button>
+      </div>
+
+      <div class="rank-card">
+        <div class="rank-icon"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjsZZHOSqICOEii8GLsBkEeJU88zarMSjdN2ETN21HYvYrALNCtjR9BtPZ8m-DsbVc1toJOiFu7RqL6sty7sm1okJYqB_DeFbiUMivd2xejSDn1m40ngUbNU4w6CwQoBPjYj-d_-fcHnXTDVaZMgHFb7X8HW5OT_il7rqxI07HEy24FaycMLYTxTdOzZKCW/s484/logo-icon-rank-mythical-glory-png-ml.png" alt="Mythic Glory"></div>
+        <div class="rank-name">Mythic Glory</div>
+        <div class="rank-price-wrap">
+          <div class="rank-price">Rp10.000</div>
+        </div>
+        <div class="rank-note">1 Poin = Rp10.000</div>
+        <button onclick="openOrderModal('MythicGlory')" class="btn-rank">Order</button>
+      </div>
+
+      <div class="rank-card">
+        <div class="rank-icon"><img src="https://plain-apac-prod-public.komododecks.com/202605/21/k77ezG5ut0gEJgwTTNls/image.png" alt="Mythic Immortal"></div>
+        <div class="rank-name">Mythic Immortal</div>
+        <div class="rank-price-wrap">
+          <div class="rank-price">Rp13.000</div>
+        </div>
+        <div class="rank-note">1 Poin = Rp13.000</div>
+        <button onclick="openOrderModal('MythicImmortal')" class="btn-rank">Order</button>
+      </div>
+
+    </div>
+
+    <!-- MABAR BARENG PENJOKI -->
+    <div class="sec-tag" style="margin-top:60px;">Layanan Lain</div>
+    <h2 class="sec-h">Mabar Bareng Penjoki</h2>
+    <p class="sec-sub">Main bareng langsung sama penjoki pro!</p>
+
+    <div class="mabar-single-card">
+      <div class="mabar-single-icon"><img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExeHE4bTU0eWxrbHkxb2JjYmFlZXhmdWZzcm44bmF5cmt0ZzNkdnZlMyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/JsDS5BmcySXkPLyghU/giphy.gif" alt="Gaming" style="width:60px;height:60px;object-fit:contain;border-radius:12px;"></div>
+      <div class="mabar-single-content">
+        <div class="mabar-single-title">Mabar Bareng Penjoki</div>
+        <div class="mabar-single-desc">Main rank bareng langsung sama penjoki dijamin winstreak!</div>
+        <div class="mabar-form-row">
+          <div class="mabar-select-wrap">
+            <label>Pilih Rank Kamu</label>
+            <select id="mabarRank" onchange="calculateMabarPrice()">
+              <option value="">-- Pilih Rank --</option>
+              <option value="4000">GrandMaster</option>
+              <option value="5000">Epic</option>
+              <option value="6000">Legend</option>
+              <option value="8500">Mythic</option>
+              <option value="9000">Mythic Honor</option>
+              <option value="10000">Mythic Glory</option>
+              <option value="13000">Mythic Immortal</option>
+            </select>
+          </div>
+          <div class="mabar-select-wrap">
+            <label>Jumlah Match</label>
+            <select id="mabarMatch" onchange="calculateMabarPrice()">
+              <option value="1">1 Match</option>
+              <option value="2">2 Match</option>
+              <option value="3">3 Match</option>
+              <option value="4">4 Match</option>
+              <option value="5">5 Match</option>
+              <option value="6">6 Match</option>
+              <option value="7">7 Match</option>
+              <option value="8">8 Match</option>
+              <option value="9">9 Match</option>
+              <option value="10">10 Match</option>
+            </select>
+          </div>
+        </div>
+        <div class="mabar-price-display">
+          <span id="mabarPriceText">Rp 0</span>
+        </div>
+      </div>
+      <a href="#" id="mabarWhatsApp" target="_blank" class="btn-mabar btn-mabar-disabled" onclick="if(this.classList.contains('btn-mabar-disabled')) return false;">💬 Chat WhatsApp</a>
+    </div>
+
+    <!-- JASA EDIT MONTAGE -->
+    <h2 class="sec-h" style="margin-top:60px;">Jasa Edit Montage</h2>
+    <p class="sec-sub">Video gameplay keren untuk content kamu!</p>
+
+    <div class="montage-card">
+      <div class="montage-icon"><img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdjA4OGUzbHhwMzVlNjNjM2k1eGM2dW1xZGVkODg3dzlhdW9zeTY2eiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/yOytmZOkWp22VKvhR3/giphy.gif" alt="Video" style="width:60px;height:60px;object-fit:contain;border-radius:12px;"></div>
+      <div class="montage-content">
+        <div class="montage-title">Paket Montage Highlight</div>
+        <div class="montage-desc">3 Video montage berkualitas tinggi dengan effect, transisi, dan music!</div>
+        <div class="montage-price">Rp50.000<span>/paket</span></div>
+      </div>
+      <a href="https://wa.me/6289684943741?text=Halo,%20saya%20mau%20order%20Jasa%20Edit%20Montage%20Rp50.000%20(3%20video)" target="_blank" class="btn-montage">Order Sekarang</a>
+    </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- GUARANTEE -->
+<section class="sec guarantee">
+  <div class="sec-in">
+    <div class="sec-tag" style="color:var(--success);">Garansi</div>
+    <h2 class="sec-h">Kenapa Harus Pilih Kami?</h2>
+    <p class="sec-sub">Komitmen untuk kepuasan pelanggan</p>
+    <div class="guarantee-grid">
+      <div class="guarantee-item">
+        <div class="guarantee-icon">🔒</div>
+        <div class="guarantee-title">100% Aman</div>
+        <div class="guarantee-desc">Akun kamu aman, no banned. Data privasi terjaga</div>
+      </div>
+      <div class="guarantee-item">
+        <div class="guarantee-icon">⚡</div>
+        <div class="guarantee-title">Proses Cepat</div>
+        <div class="guarantee-desc">Rata-rata selesai dalam 1-6 jam tergantung jumlah star</div>
+      </div>
+      <div class="guarantee-item">
+        <div class="guarantee-icon">🛡️</div>
+        <div class="guarantee-title">Garansi 100%</div>
+        <div class="guarantee-desc">Star turun? Kami ulangi gratis sampai selesai target!</div>
+      </div>
+      <div class="guarantee-item">
+        <div class="guarantee-icon">💰</div>
+        <div class="guarantee-title">Money Back</div>
+        <div class="guarantee-desc">Kalau gagal, uang dikembalikan 100%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="sec testimonials" id="testi">
+  <div class="sec-in">
+    <div class="sec-tag">Testimonial</div>
+    <h2 class="sec-h">Kata Mereka</h2>
+    <p class="sec-sub">Apa kata customer yang sudah order</p>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-avatar">🎮</div>
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Cepat banget! Cuma 4 jam udah mythic honor. Tank joki pro bgt, win streak 15! 🔥"</p>
+        <div class="testi-name">Reza_Gaming</div>
+        <div class="testi-role">Customer MVP</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-avatar">⭐</div>
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">" Pertama pake joki service, awalnya ragu. Tapi sekarang udah Mythic Glory! Garansi 100% works beneran!"</p>
+        <div class="testi-name">Dimas_ML</div>
+        <div class="testi-role">Customer Loyal</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-avatar">🏆</div>
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Joki dari Epic ke Legend cuma 1 hari! Star turun dikit langsung diulang, recommended banget!"</p>
+        <div class="testi-name">Fajar_ID</div>
+        <div class="testi-role">Regular Customer</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec" id="faq">
+  <div class="sec-in">
+    <div class="sec-tag">FAQ</div>
+    <h2 class="sec-h">Pertanyaan Umum</h2>
+    <p class="sec-sub">Pertanyaan yang sering ditanyakan</p>
+    <div class="faq-list">
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-question">Berapa lama proses joki?</div>
+        <div class="faq-answer"><div class="faq-answer-inner">Rata-rata 1-6 jam tergantung jumlah star yang diorder. Kalau order banyak, bisa lebih lama tapi selalu dikomunikasikan via WhatsApp.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-question">Bagaimana kalau star turun saat joki?</div>
+        <div class="faq-answer"><div class="faq-answer-inner">Garansi 100%! Kalau star turun karena lagi kurang perform (kita yang salah), kita ulangi gratis sampai target. Kalau turun karena enemy interfere, kita hitung ulang.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-question">Bisa bayar pake apa aja?</div>
+        <div class="faq-answer"><div class="faq-answer-inner">DANA, OVO, GOPAY, ShopeePay, dan transfer bank (BCA, BRI, Mandiri). Konfirmasi pembayaran via WhatsApp.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-question">Data login aman?</div>
+        <div class="faq-answer"><div class="faq-answer-inner">Kami sangat jaga privasi. Data login HANYA digunakan untuk joki dan langsung dihapus setelah selesai. 100% confidential.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-question">Bisa joki dari rank rendah ke tinggi?</div>
+        <div class="faq-answer"><div class="faq-answer-inner">Bisa! Mulai dari Warrior sampai Mythic Immortal. Kalau rank jauh, price bisa negotiation. Chat admin untuk kalkulasi.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="sec-in">
+    <h2 class="cta-title">Siap naik rank <span>Mythic</span>?</h2>
+    <p class="cta-desc">Jangan buang waktu, mulai sekarang dan raih rank Immortal!</p>
+    <div class="cta-features">
+      <div class="cta-feature">Garansi 100%</div>
+      <div class="cta-feature">Proses 1-6 Jam</div>
+      <div class="cta-feature">Aman & Privacy</div>
+    </div>
+    <a href="https://wa.me/6289684943741" target="_blank" class="btn-primary">Chat WhatsApp Sekarang</a>
+    <p class="cta-note">©NezzDev 2026. All rights reserved.</p>
+  </div>
+</section>
+
+<div id="toast"></div>
+
+<!-- ORDER MODAL -->
+<div class="order-modal" id="orderModal">
+  <div class="order-modal-content" onclick="event.stopPropagation()">
+
+    <!-- ORDER SECTION -->
+    <div id="orderSection">
+      <div class="modal-section-title" style="justify-content:flex-start;gap:6px;padding-right:40px;margin-bottom:20px">
+        <span class="modal-icon">⚡</span>
+        <h3 style="font-size:17px;margin:0">Order Joki</h3>
+      </div>
+
+      <div class="order-form-group">
+        <label>Rank Saat Ini</label>
+        <select id="currentRank" onchange="onCurrentRankChange(); calculatePrice();">
+          <option value="">-- Pilih Rank --</option>
+        </select>
+      </div>
+
+      <div class="order-form-group">
+        <label>Rank Target</label>
+        <select id="targetRank" onchange="onTargetRankChange(); calculatePrice();" disabled>
+          <option value="">-- Pilih Target --</option>
+        </select>
+      </div>
+
+      <div class="order-price-display">
+        <div class="label">Estimasi Harga</div>
+        <div class="price" id="totalPrice">Rp 0</div>
+        <div class="detail" id="priceDetail">Pilih rank untuk lihat harga</div>
+      </div>
+
+      <button id="orderWhatsAppBtn" class="btn-order btn-order-disabled">💬 Chat WhatsApp Sekarang</button>
+
+      <div class="modal-divider"><span>atau</span></div>
+
+      <button onclick="showRedeemSection()" class="btn-order btn-order-alt">🎟️ Punya Kode Promo?</button>
+    </div>
+
+    <!-- REDEEM SECTION -->
+    <div id="redeemSection" style="display:none">
+      <button class="order-modal-back" onclick="showOrderSection()">← Kembali</button>
+
+      <div class="redeem-logo-wrap">
+        <img src="https://plain-apac-prod-public.komododecks.com/202605/20/ulWbfLykwXVJzpwXT4Qx/image.png" alt="Logo" class="redeem-logo">
+      </div>
+
+      <div class="modal-section-title">
+        <span class="modal-icon">🎁</span>
+        <h3>Redeem Code</h3>
+      </div>
+      <p class="modal-subtitle">Masukkan kode promo untuk diskon spesial!</p>
+
+      <div class="order-form-group">
+        <label>Kode Promo</label>
+        <input type="text" id="redeemCodeInput" placeholder="Ketik kode di sini..." style="text-transform:uppercase;font-size:15px;text-align:center;letter-spacing:3px;font-weight:700">
+      </div>
+
+      <div class="order-price-display" id="redeemResult" style="display:none">
+        <div class="label">Status</div>
+        <div class="price" id="redeemStatus" style="font-size:18px">Berhasil!</div>
+        <div class="detail" id="redeemDetail"></div>
+      </div>
+
+      <button onclick="submitRedeemCode()" class="btn-order btn-order-gold">🎟️ Redeem Sekarang</button>
+    </div>
+
+    <button class="order-modal-close" onclick="closeOrderModal()">×</button>
+  </div>
+</div>
+
+<script>
+// ==================== DATA ====================
+const rankPrices = {
+  'Master': 1500, 'Grandmaster': 2500, 'Epic': 4000, 'Legend': 4500,
+  'Mythic': 6000, 'MythicHonor': 7500, 'MythicGlory': 10000, 'MythicImmortal': 13000
+};
+const mythicTiers = ['Mythic', 'MythicHonor', 'MythicGlory', 'MythicImmortal'];
+const nonMythicRanks = ['Master', 'Grandmaster', 'Epic', 'Legend'];
+const rankOrder = ['Master', 'Grandmaster', 'Epic', 'Legend', 'Mythic', 'MythicHonor', 'MythicGlory', 'MythicImmortal'];
+
+// DISCOUNT CODES
+const validCodes = {
+  'JOKIML': { discount: 10, type: 'percent', description: 'Diskon 10% untuk pembelian pertama', maxUses: 100, currentUses: 0 },
+  'NEZZDEV': { discount: 15000, type: 'fixed', description: 'Diskon Rp15.000 untuk semua order', maxUses: 50, currentUses: 0 },
+  'MYTHIC50': { discount: 50, type: 'percent', description: 'Diskon 50% untuk Mythic Immortal', maxUses: 20, currentUses: 0 }
+};
+
+let userRedeemedCodes = JSON.parse(localStorage.getItem('redeemedCodes') || '[]');
+let activeDiscount = null;
+if (userRedeemedCodes.length > 0) {
+  const lastCode = userRedeemedCodes[userRedeemedCodes.length - 1];
+  if (validCodes[lastCode]) activeDiscount = validCodes[lastCode];
+}
+
+// ==================== PARTICLES ====================
+const particlesContainer = document.getElementById('particles');
+if (particlesContainer) {
+  for (let i = 0; i < 30; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.animationDelay = Math.random() * 15 + 's';
+    particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+    particle.style.width = (2 + Math.random() * 4) + 'px';
+    particle.style.height = particle.style.width;
+    particlesContainer.appendChild(particle);
+  }
+}
+
+// ==================== SCROLL ====================
+window.addEventListener('scroll', () => {
+  const scrollTop = document.documentElement.scrollTop;
+  const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const progress = (scrollTop / scrollHeight) * 100;
+  const scrollProgress = document.getElementById('scrollProgress');
+  if (scrollProgress) scrollProgress.style.width = progress + '%';
+  const backToTop = document.getElementById('backToTop');
+  if (backToTop) {
+    if (scrollTop > 500) backToTop.classList.add('visible');
+    else backToTop.classList.remove('visible');
+  }
+});
+
+function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    const loader = document.getElementById('loader');
+    if (loader) loader.classList.add('hidden');
+  }, 2200);
+});
+
+// ==================== RANK HELPERS ====================
+function getDivIdx(div) { return ['V', 'IV', 'III', 'II', 'I'].indexOf(div); }
+
+function parseRank(v) {
+  if (!v) return null;
+  const parts = v.split('_');
+  if (parts.length === 2 && mythicTiers.includes(parts[0])) {
+    return { baseRank: parts[0], div: null, stars: parseInt(parts[1]), isMythic: true };
+  }
+  if (parts.length === 3 && nonMythicRanks.includes(parts[0])) {
+    return { baseRank: parts[0], div: parts[1], stars: parseInt(parts[2]), isMythic: false };
+  }
+  return null;
+}
+
+function getRankIdx(rank) { return rankOrder.indexOf(rank); }
+
+function fmt(parsed) {
+  if (!parsed) return '';
+  return parsed.isMythic
+    ? `${parsed.baseRank} (${parsed.stars} Poin)`
+    : `${parsed.baseRank} ${parsed.div} (${parsed.stars}⭐)`;
+}
+
+// ==================== BUTTON STATE ====================
+function setOrderBtnReady(ready) {
+  const waBtn = document.getElementById('orderWhatsAppBtn');
+  if (!waBtn) return;
+  if (ready) {
+    waBtn.style.opacity = '1';
+    waBtn.style.pointerEvents = 'auto';
+    waBtn.style.cursor = 'pointer';
+    waBtn.classList.remove('btn-order-disabled');
+  } else {
+    waBtn.style.opacity = '0.5';
+    waBtn.style.pointerEvents = 'none';
+    waBtn.style.cursor = 'not-allowed';
+    waBtn.classList.add('btn-order-disabled');
+  }
+}
+
+// ==================== INIT RANK OPTIONS ====================
+function initRankOptions() {
+  const currentSelect = document.getElementById('currentRank');
+  const targetSelect = document.getElementById('targetRank');
+  if (!currentSelect || !targetSelect) return;
+
+  currentSelect.innerHTML = '<option value="">-- Pilih Rank Saat Ini --</option>';
+  targetSelect.innerHTML = '<option value="">-- Pilih Rank Target --</option>';
+
+  nonMythicRanks.forEach(rankName => {
+    let opts = '';
+    ['V', 'IV', 'III', 'II', 'I'].forEach(div => {
+      for (let s = 0; s <= 5; s++) {
+        opts += `<option value="${rankName}_${div}_${s}">${rankName} ${div} (${s}⭐)</option>`;
+      }
+    });
+    currentSelect.innerHTML += `<optgroup label="${rankName}">${opts}</optgroup>`;
+    targetSelect.innerHTML += `<optgroup label="${rankName}">${opts}</optgroup>`;
+  });
+
+  let mythicOpts = '';
+  for (let p = 1; p <= 24; p++) mythicOpts += `<option value="Mythic_${p}">Mythic (${p} Poin)</option>`;
+  for (let p = 25; p <= 49; p++) mythicOpts += `<option value="MythicHonor_${p}">Mythic Honor (${p} Poin)</option>`;
+  for (let p = 50; p <= 99; p++) mythicOpts += `<option value="MythicGlory_${p}">Mythic Glory (${p} Poin)</option>`;
+  for (let p = 100; p <= 200; p++) mythicOpts += `<option value="MythicImmortal_${p}">Mythic Immortal (${p} Poin)</option>`;
+
+  currentSelect.innerHTML += `<optgroup label="Mythic">${mythicOpts}</optgroup>`;
+  targetSelect.innerHTML += `<optgroup label="Mythic">${mythicOpts}</optgroup>`;
+}
+initRankOptions();
+
+function filterTargetOptions() {
+  const curVal = document.getElementById('currentRank').value;
+  const targetSelect = document.getElementById('targetRank');
+  const cur = parseRank(curVal);
+  if (!cur) return;
+  for (let i = 0; i < targetSelect.options.length; i++) {
+    const opt = targetSelect.options[i];
+    const target = parseRank(opt.value);
+    if (!target) { opt.hidden = true; continue; }
+    if (cur.isMythic && target.isMythic) {
+      const curIdx = mythicTiers.indexOf(cur.baseRank);
+      const targetIdx = mythicTiers.indexOf(target.baseRank);
+      if (targetIdx < curIdx) opt.hidden = true;
+      else if (targetIdx === curIdx && target.stars <= cur.stars) opt.hidden = true;
+      else opt.hidden = false;
+    } else if (!cur.isMythic && !target.isMythic) {
+      const curRankIdx = getRankIdx(cur.baseRank);
+      const targetRankIdx = getRankIdx(target.baseRank);
+      const curDiv = getDivIdx(cur.div);
+      const targetDiv = getDivIdx(target.div);
+      if (targetRankIdx < curRankIdx) opt.hidden = true;
+      else if (targetRankIdx === curRankIdx && (targetDiv < curDiv || (targetDiv === curDiv && target.stars <= cur.stars))) opt.hidden = true;
+      else opt.hidden = false;
+    } else if (!cur.isMythic && target.isMythic) {
+      opt.hidden = getRankIdx(cur.baseRank) < getRankIdx('Legend');
+    } else {
+      opt.hidden = true;
+    }
+  }
+}
+
+// ==================== ORDER MODAL ====================
+function openOrderModal(rankName) {
+  const modal = document.getElementById('orderModal');
+  if (!modal) return;
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+
+  document.getElementById('orderSection').style.display = 'block';
+  document.getElementById('redeemSection').style.display = 'none';
+
+  const cur = document.getElementById('currentRank');
+  const tar = document.getElementById('targetRank');
+  if (!cur || !tar) return;
+
+  cur.value = '';
+  tar.value = '';
+  tar.disabled = true;
+  setOrderBtnReady(false);
+
+  for (let i = 0; i < cur.options.length; i++) cur.options[i].hidden = false;
+
+  if (nonMythicRanks.includes(rankName)) {
+    for (let i = 0; i < cur.options.length; i++) {
+      cur.options[i].hidden = cur.options[i].value !== '' && !cur.options[i].value.startsWith(rankName + '_');
+    }
+  } else {
+    for (let i = 0; i < cur.options.length; i++) {
+      cur.options[i].hidden = cur.options[i].value !== '' && !cur.options[i].value.startsWith(rankName + '_');
+    }
+  }
+
+  calculatePrice();
+}
+
+function closeOrderModal() {
+  const modal = document.getElementById('orderModal');
+  if (!modal) return;
+  const cur = document.getElementById('currentRank');
+  const tar = document.getElementById('targetRank');
+  if (cur) { cur.value = ''; for (let i = 0; i < cur.options.length; i++) cur.options[i].hidden = false; }
+  if (tar) { tar.value = ''; tar.disabled = true; }
+  setOrderBtnReady(false);
+  document.getElementById('orderSection').style.display = 'block';
+  document.getElementById('redeemSection').style.display = 'none';
+  modal.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function onCurrentRankChange() {
+  const tar = document.getElementById('targetRank');
+  const cur = document.getElementById('currentRank');
+  if (!tar || !cur) return;
+  tar.value = '';
+  if (cur.value) {
+    tar.disabled = false;
+    filterTargetOptions();
+  } else {
+    tar.disabled = true;
+  }
+  setOrderBtnReady(false);
+  calculatePrice();
+}
+
+function onTargetRankChange() {
+  calculatePrice();
+}
+
+// ==================== CALCULATE PRICE ====================
+function calculateTotalPrice(cur, tar) {
+  if (!cur || !tar) return 0;
+  let total = 0;
+  if (cur.isMythic && tar.isMythic) {
+    const curTierIdx = mythicTiers.indexOf(cur.baseRank);
+    const tarTierIdx = mythicTiers.indexOf(tar.baseRank);
+    const mythicPrice = rankPrices[tar.baseRank];
+    if (curTierIdx === tarTierIdx) {
+      total = (tar.stars - cur.stars) * mythicPrice;
+    } else {
+      const tierMax = { 'Mythic': 24, 'MythicHonor': 49, 'MythicGlory': 99, 'MythicImmortal': 200 };
+      total += (tierMax[cur.baseRank] - cur.stars + 1) * rankPrices[cur.baseRank];
+      for (let i = curTierIdx + 1; i < tarTierIdx; i++) {
+        const tier = mythicTiers[i];
+        const start = (tier === 'Mythic' ? 1 : tier === 'MythicHonor' ? 25 : tier === 'MythicGlory' ? 50 : 100);
+        total += (tierMax[tier] - start + 1) * rankPrices[tier];
+      }
+      const targetStart = (tar.baseRank === 'Mythic' ? 1 : tar.baseRank === 'MythicHonor' ? 25 : tar.baseRank === 'MythicGlory' ? 50 : 100);
+      total += (tar.stars - targetStart + 1) * rankPrices[tar.baseRank];
+    }
+  } else if (!cur.isMythic && tar.isMythic) {
+    const curIdx = getRankIdx(cur.baseRank);
+    const legendIdx = getRankIdx('Legend');
+    const curDiv = getDivIdx(cur.div);
+    const mythicPrice = rankPrices[tar.baseRank];
+    total += (5 - cur.stars) * rankPrices[cur.baseRank];
+    for (let d = curDiv + 1; d < 5; d++) total += 5 * rankPrices[cur.baseRank];
+    for (let i = curIdx + 1; i < legendIdx; i++) total += 25 * rankPrices[rankOrder[i]];
+    total += 5 * rankPrices['Legend'];
+    total += tar.stars * mythicPrice;
+  } else if (!cur.isMythic && !tar.isMythic) {
+    const cIdx = getRankIdx(cur.baseRank);
+    const tIdx = getRankIdx(tar.baseRank);
+    const cDiv = getDivIdx(cur.div);
+    const tDiv = getDivIdx(tar.div);
+    if (cIdx === tIdx && cDiv === tDiv) {
+      total = (tar.stars - cur.stars) * rankPrices[cur.baseRank];
+    } else {
+      total += (5 - cur.stars) * rankPrices[cur.baseRank];
+      for (let d = cDiv + 1; d < 5; d++) total += 5 * rankPrices[cur.baseRank];
+      for (let i = cIdx + 1; i < tIdx; i++) total += 25 * rankPrices[rankOrder[i]];
+      for (let d = 0; d < tDiv; d++) total += 5 * rankPrices[tar.baseRank];
+      if (tar.stars > 0) total += tar.stars * rankPrices[tar.baseRank];
+    }
+  }
+  return total > 0 ? total : 0;
+}
+
+function calculatePrice() {
+  const cVal = document.getElementById('currentRank');
+  const tVal = document.getElementById('targetRank');
+  const pDisp = document.getElementById('totalPrice');
+  const pDet = document.getElementById('priceDetail');
+  if (!cVal || !tVal || !pDisp || !pDet) return;
+
+  if (!cVal.value) {
+    pDisp.textContent = 'Rp 0';
+    pDet.textContent = 'Pilih rank saat ini terlebih dahulu';
+    setOrderBtnReady(false);
+    return;
+  }
+  if (!tVal.value) {
+    pDisp.textContent = 'Rp 0';
+    pDet.textContent = 'Pilih rank target';
+    setOrderBtnReady(false);
+    return;
+  }
+
+  const cur = parseRank(cVal.value);
+  const tar = parseRank(tVal.value);
+  if (!cur || !tar) {
+    pDisp.textContent = 'Rp 0';
+    pDet.textContent = 'Data rank tidak valid';
+    setOrderBtnReady(false);
+    return;
+  }
+
+  let total = calculateTotalPrice(cur, tar);
+  let finalTotal = total;
+  let discountText = '';
+
+  if (activeDiscount) {
+    if (activeDiscount.type === 'percent') {
+      finalTotal = total * (1 - activeDiscount.discount / 100);
+      discountText = `\n💸 Diskon ${activeDiscount.discount}%: -Rp${(total - finalTotal).toLocaleString()}`;
+    } else {
+      finalTotal = Math.max(0, total - activeDiscount.discount);
+      discountText = `\n💸 Diskon: -Rp${activeDiscount.discount.toLocaleString()}`;
+    }
+  }
+
+  pDisp.textContent = `Rp ${Math.floor(finalTotal).toLocaleString()}`;
+  pDet.textContent = `📍 ${fmt(cur)} → ${fmt(tar)}\n💰 Total: Rp${total.toLocaleString()}${discountText}\n✨ Bayar: Rp${Math.floor(finalTotal).toLocaleString()}`;
+
+  // Aktifkan tombol - pakai inline style supaya override semua CSS class
+  setOrderBtnReady(true);
+}
+
+// ==================== WHATSAPP ORDER ====================
+function openOrderWhatsApp() {
+  const cVal = document.getElementById('currentRank');
+  const tVal = document.getElementById('targetRank');
+  if (!cVal || !tVal || !cVal.value || !tVal.value) {
+    showToast('⚠️ Pilih rank saat ini dan rank target terlebih dahulu!');
+    return;
+  }
+
+  const cur = parseRank(cVal.value);
+  const tar = parseRank(tVal.value);
+  let total = calculateTotalPrice(cur, tar);
+  let finalTotal = total;
+
+  if (activeDiscount) {
+    if (activeDiscount.type === 'percent') {
+      finalTotal = total * (1 - activeDiscount.discount / 100);
+    } else {
+      finalTotal = Math.max(0, total - activeDiscount.discount);
+    }
+  }
+
+  let msg = `Halo, saya mau order joki MLBB!\n\n`;
+  msg += `📍 Rank Saat Ini: ${fmt(cur)}\n`;
+  msg += `🎯 Rank Target: ${fmt(tar)}\n`;
+  msg += `💰 Total: Rp${Math.floor(finalTotal).toLocaleString()}\n\n`;
+  msg += `Mohon info pembayaran dan prosesnya!`;
+
+  window.open(`https://wa.me/6289684943741?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+// Redeem is now inside Order Modal — no separate modal needed.
+
+function submitRedeemCode() {
+  const codeInput = document.getElementById('redeemCodeInput');
+  if (!codeInput) return;
+  const code = codeInput.value.trim().toUpperCase();
+  const resultDiv = document.getElementById('redeemResult');
+  const statusDiv = document.getElementById('redeemStatus');
+  const detailDiv = document.getElementById('redeemDetail');
+
+  if (!code) { showToast('⚠️ Masukkan kode promo terlebih dahulu!'); return; }
+
+  if (!validCodes[code]) {
+    resultDiv.style.display = 'block';
+    statusDiv.textContent = '❌ Kode Tidak Valid';
+    detailDiv.textContent = 'Kode promo tidak tersedia.';
+    return;
+  }
+  if (userRedeemedCodes.includes(code)) {
+    resultDiv.style.display = 'block';
+    statusDiv.textContent = '⚠️ Sudah Digunakan';
+    detailDiv.textContent = 'Anda sudah menggunakan kode ini.';
+    return;
+  }
+  const codeData = validCodes[code];
+  if (codeData.currentUses >= codeData.maxUses) {
+    resultDiv.style.display = 'block';
+    statusDiv.textContent = '❌ Kode Habis';
+    detailDiv.textContent = 'Kode promo sudah mencapai batas.';
+    return;
+  }
+
+  userRedeemedCodes.push(code);
+  localStorage.setItem('redeemedCodes', JSON.stringify(userRedeemedCodes));
+  codeData.currentUses++;
+  activeDiscount = codeData;
+
+  resultDiv.style.display = 'block';
+  statusDiv.textContent = '✅ Berhasil!';
+  const discText = codeData.type === 'percent' ? `${codeData.discount}%` : `Rp${codeData.discount.toLocaleString()}`;
+  detailDiv.textContent = `Diskon ${discText}! ${codeData.description}`;
+  showToast(`🎉 Kode ${code} berhasil! Diskon ${discText}`);
+
+  if (document.getElementById('orderModal').classList.contains('active')) calculatePrice();
+}
+
+function showRedeemSection() {
+  document.getElementById('orderSection').style.display = 'none';
+  document.getElementById('redeemSection').style.display = 'block';
+  const input = document.getElementById('redeemCodeInput');
+  if (input) input.value = '';
+  const result = document.getElementById('redeemResult');
+  if (result) result.style.display = 'none';
+}
+
+function showOrderSection() {
+  document.getElementById('orderSection').style.display = 'block';
+  document.getElementById('redeemSection').style.display = 'none';
+}
+
+// ==================== MABAR ====================
+function calculateMabarPrice() {
+  const rankSelect = document.getElementById('mabarRank');
+  const matchSelect = document.getElementById('mabarMatch');
+  const priceText = document.getElementById('mabarPriceText');
+  const waLink = document.getElementById('mabarWhatsApp');
+  if (!rankSelect || !matchSelect || !priceText || !waLink) return;
+  if (!rankSelect.value) {
+    priceText.textContent = 'Pilih rank dulu';
+    waLink.classList.add('btn-mabar-disabled');
+    waLink.href = '#';
+    return;
+  }
+  waLink.classList.remove('btn-mabar-disabled');
+  const rankText = rankSelect.options[rankSelect.selectedIndex].text;
+  const totalPrice = parseInt(rankSelect.value) * parseInt(matchSelect.value);
+  priceText.textContent = 'Rp ' + totalPrice.toLocaleString() + ' (' + matchSelect.value + ' match)';
+  waLink.href = `https://wa.me/6289684943741?text=${encodeURIComponent('Halo, saya mau Mabar Bareng Penjoki!\n\n🎮 Rank: ' + rankText + '\n📊 Jumlah Match: ' + matchSelect.value + '\n💰 Total: Rp ' + totalPrice.toLocaleString())}`;
+}
+
+// ==================== INIT BUTTON ====================
+document.addEventListener('DOMContentLoaded', function () {
+  // Pasang onclick langsung di sini, TANPA clone
+  const waBtn = document.getElementById('orderWhatsAppBtn');
+  if (waBtn) {
+    waBtn.addEventListener('click', function () {
+      openOrderWhatsApp();
+    });
+  }
+
+  // Pastikan tombol dimulai dalam state disabled via style
+  setOrderBtnReady(false);
+
+  // Add redeem link to nav
+  const nav = document.getElementById('navLinks');
+  if (nav) {
+    nav.appendChild(li);
+  }
+});
+
+// ==================== TOAST & FAQ ====================
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+function toggleFaq(item) {
+  if (!item) return;
+  const isActive = item.classList.contains('active');
+  document.querySelectorAll('.faq-item').forEach(i => {
+    i.classList.remove('active');
+    const ans = i.querySelector('.faq-answer');
+    if (ans) ans.style.maxHeight = '0';
+  });
+  if (!isActive) {
+    item.classList.add('active');
+    const ans = item.querySelector('.faq-answer');
+    if (ans) ans.style.maxHeight = ans.scrollHeight + 'px';
+  }
+}
+</script>
+</body>
+</html>
